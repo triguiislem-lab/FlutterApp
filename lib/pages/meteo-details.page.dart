@@ -56,10 +56,10 @@ class _MeteoDetailsPageState extends State<MeteoDetailsPage> {
               itemCount: meteoData['list'].length,
               itemBuilder: (context, index) {
                 final data = meteoData['list'][index];
-                final weatherMain = data['weather'][0]['main'].toString().toLowerCase();
+                final meteoprincipale = data['weather'][0]['main'].toString().toLowerCase();
                 final description = data['weather'][0]['description'];
-                final temp = (data['main']['temp'] - 273.15).round(); // Convert to °C
-                final timestamp = DateTime.fromMillisecondsSinceEpoch(data['dt'] * 1000);
+                final temp = (data['main']['temp'] - 273.15).round(); 
+                final timestamp = DateTime.fromMicrosecondsSinceEpoch(data['dt'] * 1000000);
                 final dateStr = DateFormat('E-dd/MM/yyyy').format(timestamp);
                 final timeStr = DateFormat('HH:mm').format(timestamp);
 
@@ -67,7 +67,7 @@ class _MeteoDetailsPageState extends State<MeteoDetailsPage> {
                   color: Colors.blue[300],
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage("images/$weatherMain.png"),
+                      backgroundImage: AssetImage("images/$meteoprincipale.png"),
                     ),
                     title: Text("$dateStr\n$timeStr | $description"),
                     trailing: Text(
