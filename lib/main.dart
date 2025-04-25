@@ -9,12 +9,9 @@ import 'package:voyage/pages/pays.page.dart';
 import 'package:voyage/pages/contact.page.dart';
 import 'package:voyage/pages/parametre.page.dart';
 
-
-
 void main() {
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   final routes = {
     '/home': (context) => Home(),
