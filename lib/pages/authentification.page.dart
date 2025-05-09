@@ -1,3 +1,4 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -52,7 +53,7 @@ class AuthentificationPage extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: ElevatedButton(
               onPressed: () {
-                _onAuthentifier(context); // _ car private
+               _signInWithEmailAndPassword(context);
               },
               child: Text(
                 "se connecter",
@@ -84,24 +85,34 @@ class AuthentificationPage extends StatelessWidget {
     );
   }
 
-  Future<void> _onAuthentifier(BuildContext context) async {
-    prefs = await SharedPreferences.getInstance();
-    if (txt_login.text.isNotEmpty && txt_password.text.isNotEmpty) {
-      if (txt_login.text == prefs.getString("login") && txt_password.text == prefs.getString("password")) {
-        prefs.setBool("connecte", true);
-        Navigator.pop(context);
-      Navigator.pushNamed(context, '/home');
-      } else {
-        const snackBar = SnackBar(
-          content: Text('Email ou mot de passe incorrect'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } 
-    } else {
-      const snackBar = SnackBar(
-        content: Text('Veuillez remplir tous les champs'),
+ Future<void> _signInWithEmailAndPassword(BuildContext context) async {
+    final email = txt_login.text.trim();
+    final password = txt_password.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Veuillez remplir tous les champs')),
       );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } on FirebaseAuthException catch (e) {
+      String message = 'Erreur: ${e.message}';
+      if (e.code == 'user-not-found') {
+        message = 'Aucun utilisateur trouvé pour cet email.';
+      } else if (e.code == 'wrong-password') {
+        message = 'Mot de passe incorrect.';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     }
   }
 }

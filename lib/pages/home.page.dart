@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voyage/menu/drawer.widget.dart';
@@ -86,13 +87,10 @@ class Home extends StatelessWidget {
                 image: AssetImage('Images/deconnexion.png'),
               ),
               onTap: () async {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.setBool("connecte", false);
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/authentification',
-                  (route) => false,
-                );
+                 await FirebaseAuth.instance.signOut();
+              // Redirection après déconnexion
+              Navigator.pushReplacementNamed(context, '/authentification');
+            
               },
             ),
           ],

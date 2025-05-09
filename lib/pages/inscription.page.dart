@@ -1,3 +1,4 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -52,7 +53,7 @@ class InscriptionPage extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: ElevatedButton(
               onPressed: () {
-                _onInscrire(context); // _ car private
+                _signUp(context);
               },
               child: Text(
                 "inscription",
@@ -81,19 +82,36 @@ class InscriptionPage extends StatelessWidget {
     );
   }
 
-  Future<void> _onInscrire(BuildContext context) async {
-    prefs = await SharedPreferences.getInstance();
-    if (txt_login.text.isNotEmpty && txt_password.text.isNotEmpty) {
-      prefs.setString("login", txt_login.text);
-      prefs.setString("password", txt_password.text);
-      prefs.setBool("connecte", true);
-      Navigator.pop(context);
-      Navigator.pushNamed(context, '/home');
-    } else {
-      const snackBar = SnackBar(
-        content: Text('Veuillez remplir tous les champs'),
+Future<void> _signUp(BuildContext context) async {
+    final email = txt_login.text.trim();
+    final password = txt_password.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Veuillez remplir tous les champs')),
       );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } on FirebaseAuthException catch (e) {
+      String message = 'Une erreur est survenue';
+      if (e.code == 'email-already-in-use') {
+        message = 'Cet email est déjà utilisé.';
+      } else if (e.code == 'invalid-email') {
+        message = 'Email invalide.';
+      } else if (e.code == 'weak-password') {
+        message = 'Le mot de passe est trop faible.';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     }
   }
 }

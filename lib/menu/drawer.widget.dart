@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -92,13 +93,9 @@ class Drawerwidget extends StatelessWidget {
               leading: const Icon(Icons.logout, color: Colors.blue),
               trailing: const Icon(Icons.arrow_right, color: Colors.blue),
               onTap: () async {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.setBool("connecte", false);
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/authentification',
-                  (route) => false,
-                );
+               await FirebaseAuth.instance.signOut();
+              // Redirection après déconnexion
+              Navigator.pushReplacementNamed(context, '/authentification');
               }, 
             ),Divider(height: 4, color: Colors.blue),
             // Tu peux ajouter d'autres ListTile ici si besoin

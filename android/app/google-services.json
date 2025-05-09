@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "497404483547",
+    "project_id": "voyage-e86c6",
+    "storage_bucket": "voyage-e86c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497404483547:android:e1faf3ed7ecf9db613b9fe",
+        "android_client_info": {
+          "package_name": "com.example.voyage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_Faxy1vvGg77nVjWdYVs-wUp1QAesOzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
